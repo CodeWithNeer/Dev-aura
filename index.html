@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devs Aura</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Boldonse&family=Hubot+Sans:ital,wght@0,200..900;1,200..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #333;
+            --accent: #666;
+            --dark: #000;
+            --light: #fff;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --gray-300: #e0e0e0;
+            --gray-400: #bdbdbd;
+            --gray-500: #9e9e9e;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --gray-900: #212121;
+            --card-width: 450px;
+            --card-height: 500px;
+            --aura-color: rgba(255, 100, 50, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'hubot sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            background-image: linear-gradient(145deg, #121212, #1a1a1a);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            overflow-x: hidden;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 10%;
+            left: 25%;
+            width: 50%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(100, 100, 255, 0.15) 0%, rgba(50, 50, 150, 0) 70%);
+            z-index: -1;
+            filter: blur(120px);
+        }
+
+        header {
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(95deg, #ff0000, #fffb00, #00ff15, #00e1ff, #b700ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient 7s ease infinite;
+            background-size: 300% 300%;
+            font-family: 'boldonse', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--gray-400);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(5px);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: var(--card-width);
+            height: var(--card-height);
+            margin: 0 auto;
+            position: relative;
+            transition: transform 0.5s ease;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 24px;
+            overflow: visible;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            background: rgba(20, 25, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .card-aura {
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            right: -30px;
+            bottom: -30px;
+            border-radius: 30px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+
+        .card:hover .card-aura {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            opacity: 0.7;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            width: 100%;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            color: var(--light);
+            border-radius: 24px;
+            background: rgba(15, 20, 25, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+
+        .archetype {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-size: 1.6rem;
+            line-height: 1.1;
+            word-wrap: break-word;
+        }
+
+        .mental-ram-display {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 90px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-400);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .stat-value {
+            font-size: 0.85rem;
+            flex-grow: 1;
+            font-weight: 400;
+            color: var(--gray-100);
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        .id-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .edit-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .edit-form.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .form-container {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--light);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--gray-300);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-buttons button {
+            flex: 1;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            font-size: 0.875rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toast.active {
+            opacity: 1;
+        }
+
+        .rare-toast {
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(50, 50, 50, 0.8));
+            color: #fff;
+            font-weight: 700;
+            border-left: 4px solid gold;
+        }
+
+        .rare-card {
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 25%;
+            }
+
+            25% {
+                background-position: 50% 50%;
+            }
+
+            50% {
+                background-position: 100% 100%;
+            }
+
+            75% {
+                background-position: 50% 50%;
+            }
+
+            100% {
+                background-position: 0% 25%;
+            }
+        }
+
+        @keyframes flameAnimation {
+            0% {
+                filter: blur(30px) brightness(1);
+                transform: scale(0.98) rotate(-1deg);
+                opacity: 0.7;
+            }
+
+            25% {
+                filter: blur(28px) brightness(1.3);
+                transform: scale(1.02) rotate(0.5deg);
+                opacity: 0.8;
+            }
+
+            50% {
+                filter: blur(32px) brightness(1.2);
+                transform: scale(1.01) rotate(0deg);
+                opacity: 0.9;
+            }
+
+            75% {
+                filter: blur(30px) brightness(1.1);
+                transform: scale(1.03) rotate(-0.5deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                filter: blur(30px) brightness(1);
+                transform: scale(0.98) rotate(-1deg);
+                opacity: 0.7;
+            }
+        }
+
+        .flame-aura {
+            animation: flameAnimation 6s ease-in-out infinite;
+            opacity: 0.85 !important;
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 0.875rem;
+            }
+
+            .card-width {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Dev Aura Generator</h1>
+            <p class="subtitle">Visualize your coding energy field</p>
+            <div class="actions">
+                <button id="generate-btn">🔮 Generate</button>
+                <button id="edit-btn">✏️ Customize</button>
+                <button id="save-btn">💾 Save Card</button>
+            </div>
+        </header>
+
+        <div class="card-container">
+            <div class="card">
+                <div class="card-aura flame-aura"></div>
+                <div class="card-bg"></div>
+
+                <div class="card-content">
+                    <div class="card-header">
+                        <div class="card-title">DEV AURA</div>
+                        <div class="archetype" id="archetype">Console.log Cultist</div>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-row">
+                            <div class="stat-label">Error</div>
+                            <div class="stat-value" id="error">undefined is not a function</div>
+                        </div>
+
+                        <div class="stat-row">
+                            <div class="stat-label">Vibe</div>
+                            <div class="stat-value" id="vibe-color">Electric Purple</div>
+                        </div>
+
+                        <div class="stat-row">
+                            <div class="stat-label">Weapon</div>
+                            <div class="stat-value" id="weapon">Dark Theme + Coffee</div>
+                        </div>
+
+                        <div class="stat-row">
+                            <div class="stat-label">Commit</div>
+                            <div class="stat-value" id="commit-energy">Chaotic Neutral - commits to main</div>
+                        </div>
+
+                        <div class="stat-row">
+                            <div class="stat-label">Mental RAM</div>
+                            <div class="stat-value" id="mental-ram">2%</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="edit-form" id="edit-form">
+        <div class="form-container">
+            <h3 class="form-title">✨ Customize Your Dev Aura</h3>
+            <div class="form-group">
+                <label for="edit-archetype">Dev Archetype</label>
+                <input type="text" id="edit-archetype">
+            </div>
+            <div class="form-group">
+                <label for="edit-mental-ram">Mental RAM (%)</label>
+                <input type="number" id="edit-mental-ram" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label for="edit-error">Most Frequent Error</label>
+                <input type="text" id="edit-error">
+            </div>
+            <div class="form-group">
+                <label for="edit-vibe-color">Vibe Color</label>
+                <input type="text" id="edit-vibe-color">
+            </div>
+            <div class="form-group">
+                <label for="edit-weapon">Weapon of Choice</label>
+                <input type="text" id="edit-weapon">
+            </div>
+            <div class="form-group">
+                <label for="edit-commit-energy">Commit Energy</label>
+                <input type="text" id="edit-commit-energy">
+            </div>
+            <div class="form-group">
+                <label for="edit-bio">One-liner Bio</label>
+                <textarea id="edit-bio" rows="2"></textarea>
+            </div>
+            <div class="form-buttons">
+                <button id="edit-save-btn">Save Changes</button>
+                <button id="cancel-btn" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Card saved to your device!</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // DOM elements
+            const card = document.querySelector('.card');
+            const cardBg = document.querySelector('.card-bg');
+            const cardAura = document.querySelector('.card-aura');
+            const archetypeEl = document.getElementById('archetype');
+            const mentalRamEl = document.getElementById('mental-ram');
+            const errorEl = document.getElementById('error');
+            const vibeColorEl = document.getElementById('vibe-color');
+            const weaponEl = document.getElementById('weapon');
+            const commitEnergyEl = document.getElementById('commit-energy');
+
+            // Fix: Make sure we're correctly selecting the buttons
+            const generateBtn = document.getElementById('generate-btn');
+            const editBtn = document.getElementById('edit-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const editForm = document.getElementById('edit-form');
+            const editSaveBtn = document.getElementById('edit-save-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const toast = document.getElementById('toast');
+
+            // Add an ID tag element if it doesn't exist
+            if (!document.querySelector('.id-tag')) {
+                const idTag = document.createElement('div');
+                idTag.className = 'id-tag';
+                document.querySelector('.card-content').appendChild(idTag);
+            }
+
+            // Edit form fields
+            const editArchetype = document.getElementById('edit-archetype');
+            const editMentalRam = document.getElementById('edit-mental-ram');
+            const editError = document.getElementById('edit-error');
+            const editVibeColor = document.getElementById('edit-vibe-color');
+            const editWeapon = document.getElementById('edit-weapon');
+            const editCommitEnergy = document.getElementById('edit-commit-energy');
+
+            // Data arrays
+            const archetypes = [
+                'Console.log Cultist',
+                'Margin Warrior',
+                'Tailwind Overlord',
+                'Callback Hell Dweller',
+                'Stack Overflow Oracle',
+                'Git Blame Dodger',
+                'Regex Necromancer',
+                'Node Module Hoarder',
+                'TypeScript Evangelist',
+                'Legacy Code Archaeologist',
+                'Docker Container Mystic',
+                'Semicolon Sentinel',
+                'Midnight Debugger',
+                'Vim Virtuoso',
+                'Breaking Build Bandit',
+                'Scrum Survivor',
+                'Database Deity',
+                'Frontend Folklorist',
+                'API Whisperer',
+                'Webpack Warlock',
+                'Pull Request Philosopher',
+                'The Comment Comedian',
+                'Boolean Juggler',
+                'Dark Mode Disciple',
+                'Junior Wizard in Training',
+                'The Unreachable Code Monk',
+                'Keyboard Shortcut Samurai',
+                'Copy-Paste Connoisseur',
+                'Branching Strategist',
+                '404 Error Prophet',
+                'Agile Alchemist',
+                'Design Token Enchanter',
+                'Environment Variable Sorcerer',
+                'Hot Reload Hermit',
+                'Build Pipeline Shaman',
+                'The One-Liner Monk',
+                'Infinite Scroll Summoner',
+                'The Framework Hopper',
+                'Tab vs Space Gladiator',
+                'The Great Renamer'
+            ];
+
+            const rareArchetypes = [
+                'The Sleeping Senior',
+                'CSS Sorcerer',
+                'Legendary 10x Engineer',
+                'Production Hotfixer',
+                'Deadline Defier',
+                'The Commented Code Keeper',
+                'Quantum Bug Hunter',
+                'The Indentation Sage',
+                'Ancient Mainframe Mage',
+                'The One Who Actually Reads Docs',
+                'The Merge Conflict Whisperer',
+                'The Keyboard Warrior Monk',
+                'Legacy Code Alchemist',
+                'The Silent Standup Ghost',
+                'Dark Mode Defender',
+                'The Unreachable QA Prophet',
+                'Branch Naming Poet',
+                'The Bug Summoner',
+                'Late Night Debugging Bard',
+                'The One Who Writes Clean Git History',
+                'The Forgotten Intern Turned Legend',
+                'Meeting Ninja – Always Present, Never Heard',
+                'The Architecture Philosopher',
+                'The Feature Flag Fanatic',
+                'The DevOps Druid',
+                'The One With 300 Browser Tabs',
+                'Sleepless Sprint Sorcerer',
+                'JIRA Tamer',
+                'The Ticket Magician',
+                'Ancient Stack Guardian'
+            ];
+
+            const errors = [
+                'undefined is not a function',
+                'cannot read property of undefined',
+                'unexpected token }',
+                'maximum call stack size exceeded',
+                'object Object',
+                'null pointer exception',
+                'CORS error; access blocked by policy',
+                'missing semicolon on line 247',
+                'dependency conflict: incompatible version',
+                'too many re-renders',
+                'memory leak detected',
+                'promise rejected silently',
+                'prop types validation failed',
+                'the dreaded "it works on my machine"',
+                'module not found',
+                'expected string, got object',
+                'no such file or directory',
+                'cannot push to locked branch',
+                'unexpected end of JSON input',
+                'unreachable code detected',
+                'segmentation fault (core dumped)',
+                'npm install failed without explanation',
+                'stack overflow at line 0',
+                'database connection refused',
+                'permission denied: cannot execute file',
+                'infinite loop detected',
+                'X is not iterable',
+                'invalid hook call',
+                'cannot set headers after they are sent',
+                'script timeout exceeded',
+                'socket hang up',
+                'referenceError: event is not defined',
+                'syntax error in regular expression',
+                'ERR_INVALID_ARG_TYPE',
+                'fatal: not a git repository',
+                'illegal return statement',
+                'unexpected keyword "await"',
+                'TypeError: Cannot destructure property',
+                'invalid value for enum',
+                'html parser error: element not closed properly'
+            ];
+
+            const vibeColors = [
+                'Electric Purple',
+                'Debugger Blue',
+                'Localhost Green',
+                'Error Red',
+                'Warning Yellow',
+                'Terminal Black',
+                'Hex #00FFAD',
+                'Function Gold',
+                'Variable Violet',
+                'Markdown Gray',
+                'Prototype Pink',
+                'Syntax Cyan',
+                'Method Magenta',
+                'Comment Beige',
+                'Database Silver',
+                'Breakpoint Orange',
+                'Package Teal',
+                'Query Lime',
+                'Framework Fuchsia',
+                'Object Obsidian',
+                'Loop Lavender',
+                'Null Navy',
+                'Promise Peach',
+                'Import Indigo',
+                'Deploy Bronze',
+                'Stack Sky',
+                'Logic Lilac',
+                'Cloud Coral',
+                'Cache Crimson',
+                'Compile Copper',
+                'Pixel Plum',
+                'Render Rose',
+                'Exception Emerald',
+                'Refactor Ruby',
+                'Hover Honey',
+                'Script Sapphire',
+                'Inline Ivory',
+                'Parameter Periwinkle',
+                'Runtime Rust',
+                'Token Tangerine'
+            ];
+
+            const weapons = [
+                'Dark Theme + Coffee',
+                'Copilot + Stack Overflow',
+                'Rubber Duck + Headphones',
+                'Multiple Monitors + Ergonomic Chair',
+                'Terminal Aliases + Bash Scripts',
+                'Custom Keyboard + VS Code Extensions',
+                'Regex Reference + Patience',
+                'GitLens + Terminal Tabs',
+                'API Docs + Postman',
+                'MDN + DevTools',
+                'Dual Boot + Virtual Machines',
+                'Neovim + tmux',
+                'Notion + Multiple Browser Profiles',
+                'ChatGPT + Documentation',
+                'Debugger + Console Logging',
+                'Refactoring + Unit Tests',
+                'Figma + Design System',
+                'CI/CD Pipeline + Automated Tests',
+                'Memes + Slack Channels',
+                'Code Review + Pair Programming',
+                'Keyboard Shortcuts + Muscle Memory',
+                'AI Autocomplete + Prayer',
+                'Late-Night Coding + Existential Crisis',
+                'Code Comments + Future Regret',
+                'Dark Mode + Eye Strain',
+                'Rubber Duck + Existential Monologue',
+                'Old Stack Overflow Answers + Hope',
+                '12 Chrome Tabs + Fear of Closing Them',
+                'Syntax Highlighter + Blind Faith',
+                'Debugging Skills + Blind Luck',
+                'Stack Overflow + Copy-Paste Sorcery',
+                'Git Stash + Panic',
+                'Infinite TODOs + Procrastination',
+                '404 Pages + Stack Overflow Deep Dives',
+                'Linting Errors + Deep Sighs',
+                'Hacker Typer + Imposter Syndrome',
+                'Browser Console + Endless Errors',
+                'Ctrl+C, Ctrl+V + Coffee',
+                'VPN + Unblocked Reddit',
+                'Google-Fu + Sheer Determination'
+            ];
+
+            const commitEnergies = [
+                'Chaotic Neutral - commits to main',
+                'Lawful Evil - force pushes to master',
+                'Chaotic Good - PRs with detailed comments',
+                'Neutral Good - follows conventions precisely',
+                'Lawful Good - writes tests before code',
+                'True Neutral - squashes all commits',
+                'Chaotic Evil - commits broken code Friday 5pm',
+                'Neutral Evil - comments code out instead of deleting',
+                'Lawful Neutral - requires JIRA ticket in commit message',
+                'Commits every 5 minutes with message "wip"',
+                'Refuses to merge until CI is 100% green',
+                'Names branches like deep filesystem paths',
+                'Creates 50+ files in a single commit',
+                'Writes commit messages like epic poems',
+                'Accidentally commits .env files regularly',
+                'Rebases public branches with confidence',
+                'Meticulously crafts atomic commits',
+                'Cherry-picks like a surgeon',
+                'Uses emoji commit messages exclusively',
+                'Commits directly from production server',
+                'Commits with messages like "final_final_fix_REAL_THIS_TIME"',
+                'Pushes without pulling and calls it “agile development”',
+                'Uses `git add .` and hopes for the best',
+                'Commits all changes, realizes they were on the wrong branch',
+                'Writes commit messages in haiku form',
+                'Deletes `node_modules` before every push just in case',
+                'Fixes bugs by renaming variables',
+                'Treats merge conflicts as opportunities to rewrite history',
+                'Commits with "temporary fix" that lasts 3 years',
+                'Creates a new branch for every semicolon added',
+                'Uses `git commit -am` as a daily mantra',
+                'Solves merge conflicts by picking the longest version',
+                'Adds debug logs, forgets to remove them for prod',
+                'Git pushes, then checks what they changed',
+                'Starts commits with "sorry for the mess..."',
+                'Uses "quickfix" in every commit title — none are quick',
+                'Fixes formatting with 3 separate commits',
+                'Squashes bugs by commenting out half the file',
+                'Force pushes, then goes AFK',
+                'Commits just to trigger CI pipeline, not to change code'
+            ];
+
+            // Color palette for cards and auras
+            const colorPalettes = [
+                { bg: '#2E3440', aura: '#8FBCBB' }, // Nord
+                { bg: '#282C34', aura: '#C678DD' }, // One Dark
+                { bg: '#1E1E1E', aura: '#569CD6' }, // VS Code
+                { bg: '#24283B', aura: '#7AA2F7' }, // Tokyo Night
+                { bg: '#191919', aura: '#F08080' }, // Dark Red
+                { bg: '#292D3E', aura: '#C792EA' }, // Material
+                { bg: '#212121', aura: '#64FFDA' }, // Dark Teal
+                { bg: '#1A1A1A', aura: '#FFD700' }, // Dark Gold
+                { bg: '#0F111A', aura: '#FF9E64' }, // Dark Orange
+                { bg: '#121212', aura: '#B39DDB' }, // Dark Purple
+                { bg: '#0D1117', aura: '#58A6FF' }, // GitHub Dark
+                { bg: '#282A36', aura: '#BD93F9' }, // Dracula
+                { bg: '#300A24', aura: '#E95420' }, // Ubuntu
+                { bg: '#002B36', aura: '#268BD2' }, // Solarized Dark
+                { bg: '#1D2021', aura: '#B8BB26' }, // Gruvbox
+                { bg: '#1B1F23', aura: '#6F42C1' }, // Dark Purple 2
+                { bg: '#232136', aura: '#ECBFBD' }, // Rose Pine
+                { bg: '#16161E', aura: '#BB9AF7' }, // Tokyo Night 2
+                { bg: '#161821', aura: '#84A0C6' }, // Iceberg
+                { bg: '#2B2B2B', aura: '#A9B7C6' }, // Darcula
+                { bg: '#0C0F0A', aura: '#FF206E' }, // Midnight Rose
+                { bg: '#1E1B18', aura: '#FF6F59' }, // Ember Night
+                { bg: '#0B132B', aura: '#6FFFE9' }, // Deep Ocean
+                { bg: '#0D1B2A', aura: '#FFCB77' }, // Arctic Glow
+                { bg: '#1C1C1C', aura: '#C0CAAD' }, // Industrial Mist
+                { bg: '#141414', aura: '#E63946' }, // Blood Code
+                { bg: '#202124', aura: '#4285F4' }, // Google Night
+                { bg: '#1F1F2E', aura: '#E0A96D' }, // Moon Bronze
+                { bg: '#181818', aura: '#00BFA6' }, // Cyber Jade
+                { bg: '#1A1C1D', aura: '#F9AFAF' }, // Soft Smoke
+                { bg: '#12100E', aura: '#FAF884' }, // Shadow Lemon
+                { bg: '#11111B', aura: '#F38BA8' }, // Rose Blur
+                { bg: '#101820', aura: '#FEE715' }, // Noir Yellow
+                { bg: '#222831', aura: '#FFD369' }, // Sunset Steel
+                { bg: '#161B22', aura: '#FFA500' }, // Hacker Orange
+                { bg: '#151515', aura: '#00ADB5' }, // Ocean Byte
+                { bg: '#171717', aura: '#FF3CAC' }, // Neon Bloom
+                { bg: '#1C1B1A', aura: '#F95738' }, // Burnt Ember
+                { bg: '#141617', aura: '#E5E5E5' }, // Fog Night
+                { bg: '#2C2C54', aura: '#34ACE0' }, // Twilight Blue
+                { bg: '#0E0E52', aura: '#F67280' }, // Cosmic Love
+                { bg: '#1E1E28', aura: '#DDB6F2' }, // Dream Code
+                { bg: '#1B1B2F', aura: '#E43F5A' }, // Rebel Red
+                { bg: '#1A1B27', aura: '#A6E3E9' }, // Frosted Code
+                { bg: '#161925', aura: '#F1FA8C' }, // Static Glow
+                { bg: '#17141F', aura: '#FF79C6' }, // Bubblebyte
+                { bg: '#2B2D42', aura: '#8D99AE' }, // Fogbyte
+                { bg: '#0F0F0F', aura: '#F72585' }, // Void Pink
+                { bg: '#080708', aura: '#3FC1C9' }, // Night Neon
+                { bg: '#1B1D1E', aura: '#D72638' }, // Code Crimson
+            ];
+
+            // Generate random card data
+            function generateCardData() {
+                const isRareCard = Math.random() < 0.1; // 10% chance for rare card
+                let selectedArchetype;
+
+                if (isRareCard) {
+                    selectedArchetype = rareArchetypes[Math.floor(Math.random() * rareArchetypes.length)];
+                    showToast('✨ RARE CARD GENERATED! ✨', true);
+                } else {
+                    selectedArchetype = archetypes[Math.floor(Math.random() * archetypes.length)];
+                }
+
+                const mentalRam = Math.floor(Math.random() * 100) + 1;
+                const error = errors[Math.floor(Math.random() * errors.length)];
+                const vibeColor = vibeColors[Math.floor(Math.random() * vibeColors.length)];
+                const weapon = weapons[Math.floor(Math.random() * weapons.length)];
+                const commitEnergy = commitEnergies[Math.floor(Math.random() * commitEnergies.length)];
+                const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+
+                return {
+                    archetype: selectedArchetype,
+                    mentalRam: mentalRam,
+                    error: error,
+                    vibeColor: vibeColor,
+                    weapon: weapon,
+                    commitEnergy: commitEnergy,
+                    isRare: isRareCard,
+                    bgColor: palette.bg,
+                    auraColor: palette.aura
+                };
+            }
+
+            // Update the card UI with data
+            function updateCardUI(data) {
+                archetypeEl.textContent = data.archetype;
+                mentalRamEl.textContent = `${data.mentalRam}%`;
+                errorEl.textContent = data.error;
+                vibeColorEl.textContent = data.vibeColor;
+                weaponEl.textContent = data.weapon;
+                commitEnergyEl.textContent = data.commitEnergy;
+
+                // Set card background
+                cardBg.style.background = `linear-gradient(145deg, ${data.bgColor}99, ${data.bgColor})`;
+
+                // Set aura color with advanced gradient for flame effect
+                cardAura.style.background = `radial-gradient(ellipse at center, ${data.auraColor} 0%, ${data.auraColor}88 40%, ${data.auraColor}00 70%)`;
+                cardAura.classList.add('flame-aura');
+                cardAura.style.opacity = '1';
+
+                // Add subtle style for rare cards
+                if (data.isRare) {
+                    card.classList.add('rare-card');
+                    cardAura.style.filter = 'blur(30px) brightness(1.3)';
+                    card.style.border = '1px solid rgba(255, 215, 0, 0.3)';
+
+                    // Add inner glow for rare cards
+                    card.style.boxShadow = `0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px ${data.auraColor}40 inset`;
+                } else {
+                    card.classList.remove('rare-card');
+                    cardAura.style.filter = 'blur(25px)';
+                    card.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                    card.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.3)';
+                }
+
+                // Update card ID
+                const idTag = document.querySelector('.id-tag');
+                if (idTag) {
+                    idTag.textContent = `#dev-aura-${Math.floor(Math.random() * 100000)}`;
+                }
+            }
+
+            // Generate new card
+            function generateNewCard() {
+                const cardData = generateCardData();
+                updateCardUI(cardData);
+
+                // Store current data for form editing
+                currentCardData = cardData;
+
+                // Update form fields with new data
+                populateEditForm(cardData);
+            }
+
+            // Populate edit form with data
+            function populateEditForm(data) {
+                editArchetype.value = data.archetype;
+                editMentalRam.value = data.mentalRam;
+                editError.value = data.error;
+                editVibeColor.value = data.vibeColor;
+                editWeapon.value = data.weapon;
+                editCommitEnergy.value = data.commitEnergy;
+            }
+
+            // Show/hide edit form
+            function toggleEditForm() {
+                editForm.classList.toggle('active');
+            }
+
+            // Show toast message
+            function showToast(message, isRare = false) {
+                toast.textContent = message;
+                toast.classList.add('active');
+
+                if (isRare) {
+                    toast.classList.add('rare-toast');
+                } else {
+                    toast.classList.remove('rare-toast');
+                }
+
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 3000);
+            }
+
+            // Save card as image - Using a more robust approach
+            function saveCard() {
+                try {
+                    // First check if html2canvas is available
+                    if (typeof html2canvas !== 'function') {
+                        showToast('Error: html2canvas library not loaded properly. Please refresh the page.', false);
+                        return;
+                    }
+
+                    html2canvas(card, {
+                        backgroundColor: null,
+                        scale: 2, // Higher resolution
+                        logging: false
+                    }).then(canvas => {
+                        try {
+                            const link = document.createElement('a');
+                            link.download = `dev-aura-${Date.now()}.png`;
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            showToast('Card saved to your device!');
+                        } catch (err) {
+                            console.error('Error saving card:', err);
+                            showToast('Failed to save card image. Please try again.', false);
+                        }
+                    }).catch(err => {
+                        console.error('Error rendering canvas:', err);
+                        showToast('Failed to render card image. Please try again.', false);
+                    });
+                } catch (err) {
+                    console.error('Error in saveCard function:', err);
+                    showToast('Failed to save card image. Please try again.', false);
+                }
+            }
+
+            // Movement effect for card
+            function initCardMovement() {
+                const cardContainer = document.querySelector('.card-container');
+                let bounds;
+
+                function rotateToMouse(e) {
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+
+                    if (!bounds) return;
+
+                    const leftX = mouseX - bounds.x;
+                    const topY = mouseY - bounds.y;
+                    const center = {
+                        x: leftX - bounds.width / 2,
+                        y: topY - bounds.height / 2
+                    };
+
+                    // Max rotation in degrees
+                    const maxRotation = 10;
+
+                    // How much we move the card with mouse
+                    const rotationX = maxRotation * center.y / (bounds.height / 2);
+                    const rotationY = -maxRotation * center.x / (bounds.width / 2);
+
+                    card.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+                }
+
+                cardContainer.addEventListener('mouseenter', () => {
+                    bounds = cardContainer.getBoundingClientRect();
+                    document.addEventListener('mousemove', rotateToMouse);
+                });
+
+                cardContainer.addEventListener('mouseleave', () => {
+                    document.removeEventListener('mousemove', rotateToMouse);
+                    card.style.transform = 'rotateX(0) rotateY(0)';
+                });
+            }
+
+            // Store current card data
+            let currentCardData = generateCardData();
+
+            // Initialize card with data
+            updateCardUI(currentCardData);
+            populateEditForm(currentCardData);
+
+            // Initialize 3D card movement
+            initCardMovement();
+
+            // FIX: Add console logging for debugging
+            console.log("Setting up event listeners");
+
+            // Event listeners - make sure they're attached properly
+            if (generateBtn) {
+                generateBtn.addEventListener('click', function () {
+                    console.log("Generate button clicked");
+                    generateNewCard();
+                });
+            } else {
+                console.error("Generate button not found");
+            }
+
+            if (editBtn) {
+                editBtn.addEventListener('click', function () {
+                    console.log("Edit button clicked");
+                    populateEditForm(currentCardData);
+                    toggleEditForm();
+                });
+            } else {
+                console.error("Edit button not found");
+            }
+
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function () {
+                    console.log("Save button clicked");
+                    saveCard();
+                });
+            } else {
+                console.error("Save button not found");
+            }
+
+            if (editSaveBtn) {
+                editSaveBtn.addEventListener('click', function () {
+                    console.log("Edit Save button clicked");
+                    // Get values from form
+                    const customData = {
+                        archetype: editArchetype.value,
+                        mentalRam: parseInt(editMentalRam.value) || 50,
+                        error: editError.value,
+                        vibeColor: editVibeColor.value,
+                        weapon: editWeapon.value,
+                        commitEnergy: editCommitEnergy.value,
+                        isRare: currentCardData.isRare,
+                        bgColor: currentCardData.bgColor,
+                        auraColor: currentCardData.auraColor
+                    };
+
+                    // Update card with custom data
+                    updateCardUI(customData);
+                    currentCardData = customData;
+
+                    // Close form
+                    toggleEditForm();
+                    showToast('Dev aura customized successfully!');
+                });
+            } else {
+                console.error("Edit Save button not found");
+            }
+
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function () {
+                    console.log("Cancel button clicked");
+                    toggleEditForm();
+                });
+            } else {
+                console.error("Cancel button not found");
+            }
+
+            // 3D card reveal animation when page loads
+            setTimeout(() => {
+                card.style.transform = 'rotateY(0) rotateX(0)';
+                cardAura.style.opacity = '0.5';
+            }, 300);
+
+            // Show a toast to confirm initialization
+            showToast('Dev Aura Generator loaded successfully!', false);
+            console.log("Initialization complete");
+        });
+    </script>
+
+</body>
+
+</html>
